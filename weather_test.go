@@ -2,17 +2,29 @@ package weather
 
 import (
 	"github.com/stretchr/testify/assert"
-	"github.com/thedevsaddam/gojsonq/v2"
 	"testing"
 )
 
-func TestGetWeather(t *testing.T) {
+func TestGetLiveWeather(t *testing.T) {
 	w := NewWeather("ab24eb3025e1bfa830b3790b1f721037")
 
-	req, err := w.GetWeather("中山", "base", "json")
-
-	infocode := gojsonq.New().FromString(req).Find("infocode")
+	resp, err := w.GetLiveWeather("中山", "json")
 
 	assert.Equal(t, nil, err)
-	assert.Equal(t, "10000", infocode)
+	assert.Equal(t, "10000", resp.Infocode)
+	assert.Equal(t, "中山市", resp.Lives[1].City)
+	assert.Equal(t, "广东", resp.Lives[1].Province)
+}
+
+func TestGetForecastsWeather(t *testing.T) {
+	w := NewWeather("ab24eb3025e1bfa830b3790b1f721037")
+
+	resp, err := w.GetForecastsWeather("广州", "json")
+
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "10000", resp.Infocode)
+	assert.Equal(t, "广州市", resp.Forecasts[0].City)
+	assert.Equal(t, "广东", resp.Forecasts[0].Province)
+	assert.Equal(t, "440100", resp.Forecasts[0].Adcode)
+	assert.Equal(t, "5", resp.Forecasts[0].Casts[0].Week)
 }

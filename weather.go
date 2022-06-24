@@ -1,7 +1,9 @@
 package weather
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/Simoon-F/amap-weather/types"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -11,19 +13,29 @@ type Weather struct {
 	key string
 }
 
-func NewWeather(key string) Weather {
-	return Weather{key: key}
+func NewWeather(key string) *Weather {
+	return &Weather{key: key}
 }
 
-func (w Weather) GetWeather(city, extensions, format string) (string, error) {
+// GetLiveWeather 获取实时天气
+func (w *Weather) GetLiveWeather(city, format string) (types.WeatherResponse, error) {
+	return w.getWeather(city, "base", format)
+}
+
+// GetForecastsWeather 获取天气预报
+func (w *Weather) GetForecastsWeather(city, format string) (types.WeatherResponse, error) {
+	return w.getWeather(city, "all", format)
+}
+
+func (w *Weather) getWeather(city, extensions, format string) (types.WeatherResponse, error) {
 
 	// 对 `format` 与 `extensions` 参数进行检查
 	if !(format == "xml" || format == "json") {
-		return "", fmt.Errorf("invalid response format: %s", format)
+		return types.WeatherResponse{}, fmt.Errorf("invalid response format: %s", format)
 	}
 
 	if !(extensions == "base" || extensions == "all") {
-		return "", fmt.Errorf("invalid type value(base/all): %s", format)
+		return types.WeatherResponse{}, fmt.Errorf("Invalid type value(live/forecast): %s", extensions)
 	}
 
 	// 组装 query 参数
@@ -35,32 +47,32 @@ func (w Weather) GetWeather(city, extensions, format string) (string, error) {
 
 	// 定义请求 uri
 	uri := "https://restapi.amap.com/v3/weather/weatherInfo"
-
 	// 把 string 转换成 url
 	u, err := url.ParseRequestURI(uri)
-
 	if err != nil {
-		return "", fmt.Errorf("parse url requestUrl failed,err：%s", err)
+		return types.WeatherResponse{}, fmt.Errorf("parse url requestUrl failed,err：%s", err)
 	}
 
 	// url encode
 	u.RawQuery = data.Encode()
-	fmt.Println(u.String())
-
 	resp, err := http.Get(u.String())
-
-	if err != nil {
-		return "", fmt.Errorf("get failed, err：%s", err)
-	}
-
 	defer resp.Body.Close()
+	if err != nil {
+		return types.WeatherResponse{}, fmt.Errorf("get failed, err：%s", err)
+	}
 
 	//读取内容
-	b, err := ioutil.ReadAll(resp.Body)
-
+	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return "", fmt.Errorf("get resp failed, err: %s", err)
+		return types.WeatherResponse{}, fmt.Errorf("get resp failed, err: %s", err)
 	}
 
-	return string(b), nil
+	// json 转换为 结构体
+	var wr types.WeatherResponse
+	err = json.Unmarshal([]byte(body), &wr)
+	if err != nil {
+		return types.WeatherResponse{}, fmt.Errorf("json Unmarshal, err: %s", err)
+	}
+
+	return wr, nil
 }
