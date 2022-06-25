@@ -26,5 +26,4 @@ func TestGetForecastsWeather(t *testing.T) {
 	assert.Equal(t, "广州市", resp.Forecasts[0].City)
 	assert.Equal(t, "广东", resp.Forecasts[0].Province)
 	assert.Equal(t, "440100", resp.Forecasts[0].Adcode)
-	assert.Equal(t, "5", resp.Forecasts[0].Casts[0].Week)
 }
