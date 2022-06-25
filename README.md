@@ -4,6 +4,7 @@
 <p align="center">:rainbow: 基于 高德开放平台 的天气查询扩展包</p>
 
 [![Go](https://github.com/Simoon-F/amap-weather/actions/workflows/tests.yml/badge.svg)](https://github.com/Simoon-F/amap-weather/actions/workflows/tests.yml)
+[![Go Reference](https://pkg.go.dev/badge/github.com/Simoon-F/amap-weather.svg)](https://pkg.go.dev/github.com/Simoon-F/amap-weather)
 
 ## Install
 
