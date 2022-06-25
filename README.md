@@ -6,17 +6,17 @@
 [![Go](https://github.com/Simoon-F/amap-weather/actions/workflows/tests.yml/badge.svg)](https://github.com/Simoon-F/amap-weather/actions/workflows/tests.yml)
 [![Go Reference](https://pkg.go.dev/badge/github.com/Simoon-F/amap-weather.svg)](https://pkg.go.dev/github.com/Simoon-F/amap-weather)
 
-## Install
+## 安装
 
 ```sh
 $ go get -u github.com/Simoon-F/amap-weather
 ```
 
-## Configure
+## 配置
 
 在使用本扩展之前，你需要去 [高德开放平台](https://console.amap.com/dev/index) 注册账号，然后创建应用，获取应用的 Web APi Key。
 
-## Use
+## 使用
 
 ```go
 package main
@@ -29,7 +29,7 @@ w := weather.NewWeather("key")
 
 ```
 
-### GetLiveWeather
+### 获取实时天气
 
 ```go
 resp, _ := w.GetLiveWeather("中山", "json")
@@ -68,7 +68,7 @@ Example：
 }
 
 ```
-### GetLiveWeather
+### 获取天气预报
 ```go
 resp, err := w.GetForecastsWeather("广州", "json")
 ```
@@ -140,7 +140,7 @@ Example：
 }
 ```
 
-## Parameter Description
+## 参数说明
 
 ```
 GetLiveWeather(city, format string)
@@ -150,7 +150,7 @@ GetForecastsWeather(city, format string)
 > - `city` - 城市名/[高德地址位置 adcode](https://lbs.amap.com/api/webservice/download)，比如：“广州” 或者（adcode：440100）；
 > - `format`  - 输出的数据格式，当前只支持 JSON 格式
 
-## Reference
+## 参考
 
 - [高德开放平台天气接口](https://lbs.amap.com/api/webservice/guide/api/weatherinfo/)
 
